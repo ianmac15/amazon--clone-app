@@ -79,3 +79,10 @@
   cursor: pointer;
 }
 
+.userLogin {
+  border: 1px;
+  border-radius: 5px;
+  height: 500px;
+  width: 200px;
+}
+

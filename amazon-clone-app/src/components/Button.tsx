@@ -1,13 +1,22 @@
-const Button = ({name}:properties) => {
+import { Link } from "react-router-dom"
+
+const Button = ({ name }: properties) => {
+
+  const LinkPage = () => {
+    return(<Link to={"/signIn"}></Link>)
+  }
+
   return (
     <div>
-        <button className="btn">{name}</button>
+      <button className="btn" onClick={LinkPage}>
+        {name}
+      </button>
     </div>
   )
 }
 
 interface properties {
-    name: string
+  name: string
 }
 
 export default Button
