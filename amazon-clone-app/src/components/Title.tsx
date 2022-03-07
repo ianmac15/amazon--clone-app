@@ -9,6 +9,7 @@ const Title = ({name}:properties) => {
                 <input/>
             </form>
             <Link className="btn" to={"/signIn"}>Sign In</Link>
+            
         </h1>
     )
 }

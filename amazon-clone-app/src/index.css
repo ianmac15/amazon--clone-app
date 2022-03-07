@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
 
 * {
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
+  font-family: 'Roboto', sans-serif; 
 }
 
 .title {
@@ -34,7 +36,7 @@
 
 .btn {
   color: rgb(255, 255, 255);
-  background-color: rgb(21, 103, 141);
+  background-color: rgb(255, 153, 0);
   display: inline-block;
   border: none;
   cursor: pointer;
@@ -42,6 +44,11 @@
   margin: 5px;
   border-radius: 5px;
   font-size: 15px;
+  max-height: 40px;;
+}
+
+.btn.register {
+  background-color:rgb(112, 158, 177)
 }
 
 .product {
@@ -50,10 +57,11 @@
   padding: 10px 20px;
   width: 800px;
   height:150px;
-  font-family: 'Fredoka',sans-serif;
+  
   font-size: 20px;
   display: flex;
   justify-content: space-between;
+  
 
   }
 
@@ -80,9 +88,34 @@
 }
 
 .userLogin {
-  border: 1px;
+  
+  border: 1px solid;
   border-radius: 5px;
-  height: 500px;
-  width: 200px;
+  padding: 10px;
 }
 
+.signin-form {
+  display: flex;
+  justify-content: center;
+  margin:20px;
+  
+}
+
+p {
+  font-size: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.signin-form input {
+  height: 40px;
+  width: 290px;
+  margin: 20px;
+  border: 1px solid grey;
+  border-radius: 10px;
+}
+
+.submit {
+  background-color: rgba(255, 153, 0);
+  cursor: pointer;
+}

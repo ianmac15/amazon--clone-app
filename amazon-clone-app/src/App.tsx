@@ -1,34 +1,94 @@
 import Title from "./components/Title"
 import Products from "./components/Products"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import UserLogin from "./components/UserLogin"
-
-
-
+import Register from "./components/Register"
 
 const App = () => {
 
-  const [products, setProducts] = useState<productType[]>(
-    [
-      {
-        name: 'Acer Aspire 5742g, Intel i5 2.50-Ghz,4gb RAM, 500gb SSD',
-        category: 'pc',
-        price: 500,
-        isSold: true,
-        image: "https://www.e-shop.gr/images/PER/ART2/PER.902592_1.jpg",
-        id:1
-      },
-      {
-        name: 'Fender Player Stratocaster, HSS, Mapple, Tremolo',
-        category: 'guitar',
-        price: 300,
-        isSold: false,
-        image: "https://static.nakas.gr/uploads/resources/209865/fender-player-stratocaster-mn-blk-ilektriki-kithara-normal.jpg?lm=6510D15418F17C9022C046B1CF4E3C84",
-        id:2
-      }
-    ]
+  const [users, setUsers] = useState<userType[]>([])
+
+  const [products, setProducts] = useState<productType[]>([])
+
+  useEffect(
+    () => {
+
+      const getProductsFromServer = async () => {
+        const productsFromServer = await fetchProducts()
+        setProducts(productsFromServer)
+
+    }
+
+    getProductsFromServer()
+    }, []
   )
+
+  const fetchProducts = async () => {
+    const res = await fetch("http://localhost:7000/products")
+    const data = res.json()
+    return data
+  }
+
+  const fetchProduct = async (id:number) => {
+    const res = await fetch(`http://localhost:7000/products/${id}`)
+    const data = res.json()
+    return data
+  }
+
+  const fetchUsers = async () => {
+    const res = await fetch("http://localhost:7000/users")
+    const data = res.json()
+    return data
+  }
+
+  const fetchUser = async (id:number) => {
+    const res = await fetch(`http://localhost:7000/users/${id}`)
+    const data = res.json()
+    return data
+  }
+
+  const addUser = async (newUser: newUserType) => {
+    const res = await fetch("http://localhost:7000/users",
+      {
+        method:"POST",
+        headers:{"content-type":'application/json'},
+        body: JSON.stringify(newUser)
+      }
+    )
+
+    const data = await res.json()
+
+    setUsers([...users, data])
+  }
+
+  const deleteUser = async (id:number) => {
+    const res = await fetch(`http://localhost:7000/users/${id}`,
+      {
+        method: 'DELETE'
+      }
+    )
+
+    setUsers(
+      users.filter(
+        (user) => user.id === id
+      )
+    )
+  }
+
+  const deleteProduct = async (id:number) => {
+    const res = await fetch(`http://localhost:7000/products/${id}`,
+      {
+        method: 'DELETE'
+      }
+    )
+
+    setUsers(
+      users.filter(
+        (user) => user.id === id
+      )
+    )
+  }
 
   return (
     <Router>
@@ -42,6 +102,7 @@ const App = () => {
           </div>
         } />
         <Route path="/signIn" element={<UserLogin />}/>
+        <Route path="/register" element={<Register onAdd={addUser}/>}/>
     </Routes>
     </Router>
   )
@@ -54,6 +115,24 @@ export interface productType {
   isSold: boolean
   image: string
   id: number
+}
+
+export interface userType {
+  email: string
+  username: string
+  password: string
+  id:number
+  
+}
+
+export interface onAddInterface {
+  (param:newUserType):void
+}
+
+export interface newUserType {
+  email: string
+  username: string
+  password: string
 }
 
 export default App
