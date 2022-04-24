@@ -15,26 +15,22 @@ const App = () => {
     () => {
 
       const getProductsFromServer = async () => {
-        const productsFromServer = await fetchProducts()
+        const productsFromServer = await fetchEntityAll('products')
         setProducts(productsFromServer)
+      }
 
-    }
+      const getUsersFromServer = async () => {
+        const productsFromServer = await fetchEntityAll('users')
+        setProducts(productsFromServer)
+      }
 
-    getProductsFromServer()
+      getProductsFromServer()
+      getUsersFromServer()
     }, []
   )
 
-  const fetchEntityAll = async (entity: string) => {
-    const res = await fetch(`http://localhost:7000/${entity}`)
-    const data = res.json()
-    return data
-  }
 
-  const fetchEntity = async (entity: string,id:number) => {
-    const res = await fetch(`http://localhost:7000/${entity}/${id}`)
-    const data = res.json()
-    return data
-  }
+  
 
   // const fetchUsers = async () => {
   //   const res = await fetch("http://localhost:7000/users")
@@ -51,8 +47,8 @@ const App = () => {
   const addUser = async (newUser: newUserType) => {
     const res = await fetch("http://localhost:7000/users",
       {
-        method:"POST",
-        headers:{"content-type":'application/json'},
+        method: "POST",
+        headers: { "content-type": 'application/json' },
         body: JSON.stringify(newUser)
       }
     )
@@ -62,7 +58,21 @@ const App = () => {
     setUsers([...users, data])
   }
 
-  const deleteUser = async (id:number) => {
+  const addProduct = async (newProduct: newProductType) => {
+    const res = await fetch("http://localhost:7000/users",
+      {
+        method: "POST",
+        headers: { "content-type": 'application/json' },
+        body: JSON.stringify(newProduct)
+      }
+    )
+
+    const data = await res.json()
+
+    setProducts([...products, data])
+  }
+
+  const deleteUser = async (id: number) => {
     const res = await fetch(`http://localhost:7000/users/${id}`,
       {
         method: 'DELETE'
@@ -76,19 +86,59 @@ const App = () => {
     )
   }
 
-  const deleteProduct = async (id:number) => {
-    const res = await fetch(`http://localhost:7000/products/${id}`,
+  
+  
+  const editUser = async (id: number, updEmail: string, updUsername: string, updPassword: string) => {
+
+    const userToEdit = await fetchEntity('user',id)
+    const updUser: userType = { ...userToEdit, email: updEmail, username: updUsername, password: updPassword }
+
+    const res = await fetch(`http://localhost:7000/users/${id}`,
       {
-        method: 'DELETE'
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(updUser)
       }
     )
 
+    const data: userType = await res.json()
+
+
     setUsers(
-      users.filter(
-        (user) => user.id === id
+      users.map(
+        (user) => user.id === id ? { ...user, email: data.email, username: data.username, password: data.password } : user
       )
     )
+
   }
+
+  // const editProduct = async (id: number, upd: string, updUsername: string, updPassword: string) => {
+
+  //   const userToEdit = await fetchEntity('user',id)
+  //   const updUser: userType = { ...userToEdit, email: updEmail, username: updUsername, password: updPassword }
+
+  //   const res = await fetch(`http://localhost:7000/users/${id}`,
+  //     {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-type': 'application/json'
+  //       },
+  //       body: JSON.stringify(updUser)
+  //     }
+  //   )
+
+  //   const data: userType = await res.json()
+
+
+  //   setUsers(
+  //     users.map(
+  //       (user) => user.id === id ? { ...user, email: data.email, username: data.username, password: data.password } : user
+  //     )
+  //   )
+
+  // }
 
   return (
     <Router>
@@ -101,9 +151,9 @@ const App = () => {
             </div>
           </div>
         } />
-        <Route path="/signIn" element={<UserLogin />}/>
-        <Route path="/register" element={<Register onAdd={addUser}/>}/>
-    </Routes>
+        <Route path="/signIn" element={<UserLogin />} />
+        <Route path="/register" element={<Register onAdd={addUser} />} />
+      </Routes>
     </Router>
   )
 }
@@ -121,12 +171,12 @@ export interface userType {
   email: string
   username: string
   password: string
-  id:number
-  
+  id: number
+
 }
 
 export interface onAddInterface {
-  (param:newUserType):void
+  (param: newUserType): void
 }
 
 export interface newUserType {
@@ -135,4 +185,24 @@ export interface newUserType {
   password: string
 }
 
+export interface newProductType {
+  name: string
+  category: string
+  price: number
+  isSold: boolean
+  image: string
+}
+
 export default App
+
+export const fetchEntityAll = async (entity: string) => {
+  const res = await fetch(`http://localhost:7000/${entity}`)
+  const data = res.json()
+  return data
+}
+
+export const fetchEntity = async (entity: string, id: number) => {
+  const res = await fetch(`http://localhost:7000/${entity}/${id}`)
+  const data = res.json()
+  return data
+}
