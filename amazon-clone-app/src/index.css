@@ -83,7 +83,7 @@
 .text {
   display: flex;
   align-items: flex-start;
-  justify-content: flex-end;
+  justify-content: flex-start;
   cursor: pointer;
 }
 
@@ -118,4 +118,8 @@ p {
 .submit {
   background-color: rgba(255, 153, 0);
   cursor: pointer;
+}
+
+.fawrench {
+  color: blue;
 }

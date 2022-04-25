@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { productType, newProductType, fetchEntity, fetchEntityAll } from "../App"
 
-const FetchProducts = () => {
+const FetchProducts = ({products, setProducts}: properties) => {
 
-    const [products, setProducts] = useState<productType[]>([])
+    // const [products, setProducts] = useState<productType[]>([])
 
     useEffect(
         () => {
@@ -18,7 +18,7 @@ const FetchProducts = () => {
         }, []
     )
 
-    function changeProductName(id: number, data: productType) {
+    const changeProductName = (id: number, data: productType) => {
         setProducts(
             products.map(
                 (product) => product.id === id ? { ...product, name: data.name } : product
@@ -26,7 +26,7 @@ const FetchProducts = () => {
         )  
     }
 
-    function changeProductCategory(id: number, data: productType) {
+    const changeProductCategory = (id: number, data: productType) => {
         setProducts(
             products.map(
                 (product) => product.id === id ? { ...product, category: data.category } : product
@@ -120,5 +120,12 @@ export async function putFunc(id: number, updProduct: productType) {
 
     return data
 }
+
+type properties = {
+    products: productType[]
+    setProducts: React.Dispatch<React.SetStateAction<productType[]>>
+}
+
+
 
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import UserLogin from "./components/UserLogin"
 import Register from "./components/Register"
+import FetchProducts from "./components/FetchProducts"
 
 const App = () => {
 
@@ -15,13 +16,13 @@ const App = () => {
     () => {
 
       const getProductsFromServer = async () => {
-        const productsFromServer = await fetchEntityAll('products')
+        const productsFromServer = await fetchProducts()
         setProducts(productsFromServer)
       }
 
       const getUsersFromServer = async () => {
-        const productsFromServer = await fetchEntityAll('users')
-        setProducts(productsFromServer)
+        const usersFromServer = await fetchUsers()
+        setUsers(usersFromServer)
       }
 
       getProductsFromServer()
@@ -29,20 +30,29 @@ const App = () => {
     }, []
   )
 
+  const fetchUsers = async () => {
+    const res = await fetch("http://localhost:7000/users")
+    const data = res.json()
+    return data
+  }
 
-  
+  const fetchUser = async (id:number) => {
+    const res = await fetch(`http://localhost:7000/users/${id}`)
+    const data = res.json()
+    return data
+  }
 
-  // const fetchUsers = async () => {
-  //   const res = await fetch("http://localhost:7000/users")
-  //   const data = res.json()
-  //   return data
-  // }
+  const fetchProducts = async () => {
+    const res = await fetch("http://localhost:7000/products")
+    const data = res.json()
+    return data
+  }
 
-  // const fetchUser = async (id:number) => {
-  //   const res = await fetch(`http://localhost:7000/users/${id}`)
-  //   const data = res.json()
-  //   return data
-  // }
+  const fetchProduct = async (id:number) => {
+    const res = await fetch(`http://localhost:7000/products/${id}`)
+    const data = res.json()
+    return data
+  }
 
   const addUser = async (newUser: newUserType) => {
     const res = await fetch("http://localhost:7000/users",
