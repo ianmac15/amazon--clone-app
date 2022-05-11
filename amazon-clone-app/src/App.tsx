@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import UserLogin from "./components/UserLogin"
 import Register from "./components/Register"
-import FetchProducts from "./components/FetchProducts"
+
 
 const App = () => {
 
@@ -15,40 +15,29 @@ const App = () => {
   useEffect(
     () => {
 
-      const getProductsFromServer = async () => {
-        const productsFromServer = await fetchProducts()
-        setProducts(productsFromServer)
-      }
-
       const getUsersFromServer = async () => {
-        const usersFromServer = await fetchUsers()
+        const usersFromServer = await getUsers()
         setUsers(usersFromServer)
       }
 
-      getProductsFromServer()
+      
       getUsersFromServer()
     }, []
   )
 
-  
+  const getUsers = async () => {
+    const res = await fetch("http://localhost:7000/users")
+    const data = res.json()
+    return data
+  }
 
-  const fetchUser = async (id:number) => {
+  const getUserByID = async (id:number) => {
     const res = await fetch(`http://localhost:7000/users/${id}`)
     const data = res.json()
     return data
   }
 
-  const fetchProducts = async () => {
-    const res = await fetch("http://localhost:7000/products")
-    const data = res.json()
-    return data
-  }
-
-  const fetchProduct = async (id:number) => {
-    const res = await fetch(`http://localhost:7000/products/${id}`)
-    const data = res.json()
-    return data
-  }
+  
 
   const addUser = async (newUser: newUserType) => {
     const res = await fetch("http://localhost:7000/users",
@@ -64,19 +53,7 @@ const App = () => {
     setUsers([...users, data])
   }
 
-  const addProduct = async (newProduct: newProductType) => {
-    const res = await fetch("http://localhost:7000/users",
-      {
-        method: "POST",
-        headers: { "content-type": 'application/json' },
-        body: JSON.stringify(newProduct)
-      }
-    )
-
-    const data = await res.json()
-
-    setProducts([...products, data])
-  }
+  
 
   const deleteUser = async (id: number) => {
     const res = await fetch(`http://localhost:7000/users/${id}`,
@@ -96,7 +73,7 @@ const App = () => {
   
   const editUser = async (id: number, updEmail: string, updUsername: string, updPassword: string) => {
 
-    const userToEdit = await fetchEntity('user',id)
+    const userToEdit = await getUserByID(id)
     const updUser: userType = { ...userToEdit, email: updEmail, username: updUsername, password: updPassword }
 
     const res = await fetch(`http://localhost:7000/users/${id}`,
@@ -153,7 +130,7 @@ const App = () => {
           <div>
             <Title name="Online Shop" />
             <div className="products">
-              <Products products={products} />
+              <Products/>
             </div>
           </div>
         } />
@@ -194,14 +171,5 @@ export interface newProductType {
 
 export default App
 
-export const fetchEntityAll = async (entity: string) => {
-  const res = await fetch(`http://localhost:7000/${entity}`)
-  const data = res.json()
-  return data
-}
 
-export const fetchEntity = async (entity: string, id: number) => {
-  const res = await fetch(`http://localhost:7000/${entity}/${id}`)
-  const data = res.json()
-  return data
-}
+
