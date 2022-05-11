@@ -10,7 +10,7 @@ const App = () => {
 
   const [users, setUsers] = useState<userType[]>([])
 
-  const [products, setProducts] = useState<productType[]>([])
+  
 
   useEffect(
     () => {
@@ -30,11 +30,7 @@ const App = () => {
     }, []
   )
 
-  const fetchUsers = async () => {
-    const res = await fetch("http://localhost:7000/users")
-    const data = res.json()
-    return data
-  }
+  
 
   const fetchUser = async (id:number) => {
     const res = await fetch(`http://localhost:7000/users/${id}`)
@@ -168,14 +164,7 @@ const App = () => {
   )
 }
 
-export interface productType {
-  name: string
-  category: string
-  price: number
-  isSold: boolean
-  image: string
-  id: number
-}
+
 
 export interface userType {
   email: string

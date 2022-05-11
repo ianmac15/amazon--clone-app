@@ -1,4 +1,4 @@
-import { productType } from "../App"
+import { productType } from "./Products"
 import { FaTimes, FaWrench, FaLightbulb } from 'react-icons/fa';
 
 const Product = ({ product }: properties) => {
