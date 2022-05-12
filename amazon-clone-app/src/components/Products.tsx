@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import AddProduct from "./AddProduct"
+import AddProductForm from "./AddProductForm"
 import Product from "./Product"
 
 const Products = () => {
@@ -7,15 +7,15 @@ const Products = () => {
     const [products, setProducts] = useState<productType[]>([])
     const [isAddProductOpen, setIsAddProductOpen] = useState<boolean>()
 
-    useEffect(()=>{
-        const getProductsFromSErver = async () =>{
+    useEffect(() => {
+        const getProductsFromSErver = async () => {
             const productsFromServer = await getProducts()
             setProducts(productsFromServer)
         }
-        
+
         getProductsFromSErver()
-        
-    },[])
+
+    }, [])
 
     const getProducts = async () => {
         const res = await fetch("http://localhost:7000/products")
@@ -23,7 +23,7 @@ const Products = () => {
         return data
     }
 
-    const getProductByID = async (id:number) => {
+    const getProductByID = async (id: number) => {
         const res = await fetch(`http://localhost:7000/products/${id}`)
         const data = await res.json()
         return data
@@ -38,26 +38,49 @@ const Products = () => {
         }
         )
 
-        setProducts([...products, newProduct])
+        const data = await res.json()
+
+        setProducts([...products, data])
     }
 
     const clickAdd = () => {
         setIsAddProductOpen(!isAddProductOpen)
     }
 
+    const deleteProduct = async (id: number) => {
+        await fetch(`http://localhost:7000/products/${id}`, {
+            method: "DELETE"
+        })
+
+        setProducts(products.filter(
+            (prod) => {
+                return prod.id !== id 
+            }
+        ))
+    }
+
+    const editProduct = async (id: number) => {
+        const productToEdit = getProductByID(id)
+        const res = await fetch(`http://localhost:7000/products/${id}`,{
+            method: "PUT",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify()
+        })
+    }
+
 
     return (
         <div >
             <button className="btn" onClick={clickAdd}>Add Product</button>
-            <>{isAddProductOpen ? <AddProduct addProduct ={addProduct}/> : null}</>
+            <>{isAddProductOpen ? <AddProductForm addProduct={addProduct} /> : null}</>
             {products.map(
-                (product) => (<Product key={product.id} product={product} />)
+                (product) => (<Product key={product.id} product={product} clickDel={deleteProduct}/>)
             )}
         </div>
     )
 }
 
-export interface productType {
+export type productType = {
     name: string
     // category: string
     // price: number
@@ -66,7 +89,7 @@ export interface productType {
     id: number
 }
 
-export interface newProductType {
+export type newProductType = {
     name: string
     // category: string
     // price: number
@@ -74,12 +97,12 @@ export interface newProductType {
     image: string
 }
 
-interface properties {
-    products: productType[]
+export type AddProductType = {
+    (newProduct: newProductType): void
 }
 
-export type AddProductType = {
-    (param: newProductType):void
+export type DelProductType = {
+    (delID: number): void
 }
 
 export default Products

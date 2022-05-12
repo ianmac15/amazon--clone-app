@@ -1,7 +1,7 @@
-import { productType } from "./Products"
+import { DelProductType, productType } from "./Products"
 import { FaTimes, FaWrench, FaLightbulb } from 'react-icons/fa';
 
-const Product = ({ product }: properties) => {
+const Product = ({ product, clickDel }: properties) => {
     return (
         <div className="product">
             <img src={product.image} className="image"></img>
@@ -10,6 +10,7 @@ const Product = ({ product }: properties) => {
                     {product.name}
                 </p>
                 <FaWrench className="fawrench"/>
+                <FaTimes className="fatimes" onClick={() => clickDel(product.id)}/>
             </div>
 
         </div>
@@ -18,6 +19,7 @@ const Product = ({ product }: properties) => {
 
 interface properties {
     product: productType
+    clickDel: DelProductType
 }
 
 export default Product

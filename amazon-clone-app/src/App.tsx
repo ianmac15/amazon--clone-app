@@ -161,13 +161,7 @@ export interface newUserType {
   password: string
 }
 
-export interface newProductType {
-  name: string
-  category: string
-  price: number
-  isSold: boolean
-  image: string
-}
+
 
 export default App
 
