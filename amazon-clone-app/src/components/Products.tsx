@@ -59,13 +59,21 @@ const Products = () => {
         ))
     }
 
-    const editProduct = async (id: number) => {
-        const productToEdit = getProductByID(id)
-        const res = await fetch(`http://localhost:7000/products/${id}`,{
+    const editProduct = async (editedProduct: productType) => {
+        // const productToEdit = editedProduct
+        const res = await fetch(`http://localhost:7000/products/${editedProduct.id}`,{
             method: "PUT",
             headers: {"content-type": "application/json"},
-            body: JSON.stringify()
+            body: JSON.stringify(editedProduct)
         })
+
+        const data: productType = await res.json()
+
+        setProducts(products.map((par) => 
+            (par.id == editedProduct.id ? {...par, name:data.name, image:data.image} : par)
+    
+
+        ))
     }
 
 
@@ -74,7 +82,7 @@ const Products = () => {
             <button className="btn" onClick={clickAdd}>Add Product</button>
             <>{isAddProductOpen ? <AddProductForm addProduct={addProduct} /> : null}</>
             {products.map(
-                (product) => (<Product key={product.id} product={product} clickDel={deleteProduct}/>)
+                (product) => (<Product key={product.id} product={product} clickEdit={editProduct} clickDel={deleteProduct}/>)
             )}
         </div>
     )
@@ -103,6 +111,10 @@ export type AddProductType = {
 
 export type DelProductType = {
     (delID: number): void
+}
+
+export type EditProductType = {
+    (editedProduct: productType): void
 }
 
 export default Products
