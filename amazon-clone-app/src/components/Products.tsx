@@ -5,7 +5,8 @@ import Product from "./Product"
 const Products = () => {
 
     const [products, setProducts] = useState<productType[]>([])
-    const [isAddProductOpen, setIsAddProductOpen] = useState<boolean>()
+    const [isAddButtonPressed, setIsAddButtonPressed] = useState<boolean>(false)
+    
 
     useEffect(() => {
         const getProductsFromSErver = async () => {
@@ -44,8 +45,10 @@ const Products = () => {
     }
 
     const clickAdd = () => {
-        setIsAddProductOpen(!isAddProductOpen)
+        setIsAddButtonPressed(!isAddButtonPressed)
     }
+
+    
 
     const deleteProduct = async (id: number) => {
         await fetch(`http://localhost:7000/products/${id}`, {
@@ -59,9 +62,9 @@ const Products = () => {
         ))
     }
 
-    const editProduct = async (editedProduct: productType) => {
+    const editProduct = async (id:number, editedProduct: newProductType) => {
         // const productToEdit = editedProduct
-        const res = await fetch(`http://localhost:7000/products/${editedProduct.id}`,{
+        const res = await fetch(`http://localhost:7000/products/${id}`,{
             method: "PUT",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(editedProduct)
@@ -70,7 +73,7 @@ const Products = () => {
         const data: productType = await res.json()
 
         setProducts(products.map((par) => 
-            (par.id == editedProduct.id ? {...par, name:data.name, image:data.image} : par)
+            (par.id == id ? {...par, name:data.name, image:data.image} : par)
     
 
         ))
@@ -80,10 +83,11 @@ const Products = () => {
     return (
         <div >
             <button className="btn" onClick={clickAdd}>Add Product</button>
-            <>{isAddProductOpen ? <AddProductForm addProduct={addProduct} /> : null}</>
+            <>{isAddButtonPressed ? <AddProductForm addProduct={addProduct} /> : null}</>
             {products.map(
-                (product) => (<Product key={product.id} product={product} clickEdit={editProduct} clickDel={deleteProduct}/>)
+                (product) => (<Product key={product.id} product={product} clickDel={deleteProduct} editProduct={editProduct}/>)
             )}
+            
         </div>
     )
 }
@@ -114,7 +118,7 @@ export type DelProductType = {
 }
 
 export type EditProductType = {
-    (editedProduct: productType): void
+    (editID: number ,editedProduct: newProductType): void
 }
 
 export default Products

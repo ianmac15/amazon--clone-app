@@ -1,17 +1,27 @@
 import { DelProductType, EditProductType, productType } from "./Products"
 import { FaTimes, FaWrench, FaLightbulb } from 'react-icons/fa';
+import { useState } from "react";
+import EditProductForm from './EditProductForm'
 
-const Product = ({ product, clickDel, clickEdit, editedProduct }: properties) => {
+const Product = ({ product, clickDel, editProduct }: properties) => {
+
+    const [isEditButtonPressed, setIsEditButtonPressed] = useState<boolean>(false)
+
+    const clickEdit = () => {
+        setIsEditButtonPressed(!isEditButtonPressed)
+    }
+
     return (
         <div className="product">
             <img src={product.image} className="image"></img>
-            <div  className="text">
+            <div className="text">
                 <p>
                     {product.name}
                 </p>
-                <FaWrench className="fawrench" onClick={()=>clickEdit(editedProduct)}/>
-                <FaTimes className="fatimes" onClick={() => clickDel(product.id)}/>
+                <FaWrench className="fawrench" onClick={clickEdit} />
+                <FaTimes className="fatimes" onClick={() => clickDel(product.id)} />
             </div>
+            <>{isEditButtonPressed ? <EditProductForm editProduct={editProduct} editID={product.id}/> : null}</>
 
         </div>
     )
@@ -19,9 +29,8 @@ const Product = ({ product, clickDel, clickEdit, editedProduct }: properties) =>
 
 interface properties {
     product: productType
-    clickEdit: EditProductType
     clickDel: DelProductType
-    editedProduct: productType
+    editProduct: EditProductType
 }
 
 export default Product
